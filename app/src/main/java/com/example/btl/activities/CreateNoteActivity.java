@@ -40,19 +40,11 @@ public class CreateNoteActivity extends AppCompatActivity {
 
         textDateTime.setText(getCurrentDateTime());
 
-        imageBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        imageBack.setOnClickListener(v -> finish());
 
-        imageSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(addNote()) {
-                    finish();
-                }
+        imageSave.setOnClickListener(v -> {
+            if(addNote()) {
+                finish();
             }
         });
 
@@ -111,69 +103,54 @@ public class CreateNoteActivity extends AppCompatActivity {
     }
 
     private void selectColorListener() {
-        color_1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedColor = "#333333";
-                checked_color_1.setImageResource(R.drawable.ic_done);
-                checked_color_2.setImageResource(0);
-                checked_color_3.setImageResource(0);
-                checked_color_4.setImageResource(0);
-                checked_color_5.setImageResource(0);
-                setSubtitleIndicatorColor();
-            }
+        color_1.setOnClickListener(v -> {
+            selectedColor = "#333333";
+            checked_color_1.setImageResource(R.drawable.ic_done);
+            checked_color_2.setImageResource(0);
+            checked_color_3.setImageResource(0);
+            checked_color_4.setImageResource(0);
+            checked_color_5.setImageResource(0);
+            setSubtitleIndicatorColor();
         });
 
-        color_2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedColor = "#FDBE3B";
-                checked_color_1.setImageResource(0);
-                checked_color_2.setImageResource(R.drawable.ic_done);
-                checked_color_3.setImageResource(0);
-                checked_color_4.setImageResource(0);
-                checked_color_5.setImageResource(0);
-                setSubtitleIndicatorColor();
-            }
+        color_2.setOnClickListener(v -> {
+            selectedColor = "#FDBE3B";
+            checked_color_1.setImageResource(0);
+            checked_color_2.setImageResource(R.drawable.ic_done);
+            checked_color_3.setImageResource(0);
+            checked_color_4.setImageResource(0);
+            checked_color_5.setImageResource(0);
+            setSubtitleIndicatorColor();
         });
 
-        color_3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedColor = "#FF4842";
-                checked_color_1.setImageResource(0);
-                checked_color_2.setImageResource(0);
-                checked_color_3.setImageResource(R.drawable.ic_done);
-                checked_color_4.setImageResource(0);
-                checked_color_5.setImageResource(0);
-                setSubtitleIndicatorColor();
-            }
+        color_3.setOnClickListener(v -> {
+            selectedColor = "#FF4842";
+            checked_color_1.setImageResource(0);
+            checked_color_2.setImageResource(0);
+            checked_color_3.setImageResource(R.drawable.ic_done);
+            checked_color_4.setImageResource(0);
+            checked_color_5.setImageResource(0);
+            setSubtitleIndicatorColor();
         });
 
-        color_4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedColor = "#3A52FC";
-                checked_color_1.setImageResource(0);
-                checked_color_2.setImageResource(0);
-                checked_color_3.setImageResource(0);
-                checked_color_4.setImageResource(R.drawable.ic_done);
-                checked_color_5.setImageResource(0);
-                setSubtitleIndicatorColor();
-            }
+        color_4.setOnClickListener(v -> {
+            selectedColor = "#3A52FC";
+            checked_color_1.setImageResource(0);
+            checked_color_2.setImageResource(0);
+            checked_color_3.setImageResource(0);
+            checked_color_4.setImageResource(R.drawable.ic_done);
+            checked_color_5.setImageResource(0);
+            setSubtitleIndicatorColor();
         });
 
-        color_5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedColor = "#000000";
-                checked_color_1.setImageResource(0);
-                checked_color_2.setImageResource(0);
-                checked_color_3.setImageResource(0);
-                checked_color_4.setImageResource(0);
-                checked_color_5.setImageResource(R.drawable.ic_done);
-                setSubtitleIndicatorColor();
-            }
+        color_5.setOnClickListener(v -> {
+            selectedColor = "#000000";
+            checked_color_1.setImageResource(0);
+            checked_color_2.setImageResource(0);
+            checked_color_3.setImageResource(0);
+            checked_color_4.setImageResource(0);
+            checked_color_5.setImageResource(R.drawable.ic_done);
+            setSubtitleIndicatorColor();
         });
     }
 

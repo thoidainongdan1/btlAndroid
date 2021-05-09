@@ -1,26 +1,25 @@
 package com.example.btl.recyclerview;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.btl.R;
 import com.example.btl.entities.Note;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class NoteViewAdapter extends RecyclerView.Adapter<NoteViewAdapter.NoteViewHolder> {
     private List<Note> list;
-    private Activity activity;
+    private final Activity activity;
 
     public NoteViewAdapter(Activity activity) {
         this.activity = activity;

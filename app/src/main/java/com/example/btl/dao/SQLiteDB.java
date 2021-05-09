@@ -36,7 +36,7 @@ public class SQLiteDB extends SQLiteOpenHelper {
 
     }
 
-    public long addNote(Note note) {
+    public void addNote(Note note) {
         ContentValues contentValues = new ContentValues();
         contentValues.put("title", note.getTitle());
         contentValues.put("subtitle", note.getSubtitle());
@@ -45,7 +45,7 @@ public class SQLiteDB extends SQLiteOpenHelper {
         contentValues.put("imagePath", note.getImagePath());
         contentValues.put("color", note.getColor());
         SQLiteDatabase db = getWritableDatabase();
-        return db.insert("note", null, contentValues);
+        db.insert("note", null, contentValues);
     }
 
     public List<Note> getAllNotes() {
@@ -63,13 +63,14 @@ public class SQLiteDB extends SQLiteOpenHelper {
             String color = cursor.getString(6);
             list.add(new Note(id, title, subtitle, dateTime, noteText, imagePath, color));
         }
+        cursor.close();
 
         return list;
     }
 
     public Note getNoteById(int id) {
         String whereClause = "id = ?";
-        String whereArgs[] = {Integer.toString(id)};
+        String[] whereArgs = {Integer.toString(id)};
         Note note = null;
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.query("note", null, whereClause, whereArgs, null,
@@ -82,6 +83,8 @@ public class SQLiteDB extends SQLiteOpenHelper {
             String imagePath = cursor.getString(5);
             String color = cursor.getString(6);
             note = new Note(id, title, subtitle, dateTime, noteText, imagePath, color);
+
+            cursor.close();
         }
 
         return note;
@@ -89,14 +92,14 @@ public class SQLiteDB extends SQLiteOpenHelper {
 
     public int deleteNote(int id) {
         String whereClause = "id = ?";
-        String whereArgs[] = {Integer.toString(id)};
+        String[] whereArgs = {Integer.toString(id)};
         SQLiteDatabase db = getWritableDatabase();
         return db.delete("note", whereClause, whereArgs);
     }
 
     public int updateNote(Note note) {
         String whereClause = "id = ?";
-        String whereArgs[] = {Integer.toString(note.getId())};
+        String[] whereArgs = {Integer.toString(note.getId())};
 
         ContentValues contentValues = new ContentValues();
         contentValues.put("title", note.getTitle());
@@ -112,7 +115,7 @@ public class SQLiteDB extends SQLiteOpenHelper {
     public List<Note> searchByTitle(String key) {
         List<Note> list = new ArrayList<>();
         String whereClause = "title like ?";
-        String whereArgs[] = {"%"+key+"%"};
+        String[] whereArgs = {"%"+key+"%"};
         SQLiteDatabase db = getReadableDatabase();
 
         Cursor cursor = db.query("note", null, whereClause, whereArgs,
@@ -127,6 +130,7 @@ public class SQLiteDB extends SQLiteOpenHelper {
             String color = cursor.getString(6);
             list.add(new Note(id, title, subtitle, dateTime, noteText, imagePath, color));
         }
+        cursor.close();
 
         return list;
     }
