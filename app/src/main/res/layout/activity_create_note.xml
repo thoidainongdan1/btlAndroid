@@ -10,7 +10,6 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="40dp"
         android:paddingBottom="10dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,7 +29,6 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-
             <ImageView
                 android:id="@+id/imageSave"
                 android:layout_width="30dp"
@@ -47,20 +45,20 @@
             <EditText
                 android:id="@+id/inputNoteTitle"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="50dp"
                 android:layout_marginLeft="12dp"
                 android:layout_marginTop="25dp"
                 android:layout_marginRight="12dp"
                 android:fontFamily="@font/ubuntu_bold"
+                android:hint="Tiêu đề..."
+                android:textCursorDrawable="@drawable/cursor_color"
                 android:background="@null"
-                android:hint="Tiêu đề"
                 android:imeOptions="actionDone"
                 android:importantForAutofill="no"
-                android:includeFontPadding="false"
                 android:inputType="text"
                 android:textColor="@color/colorWhite"
                 android:textColorHint="@color/colorTextHint"
-                android:textSize="20dp"
+                android:textSize="30dp"
                 app:layout_constraintTop_toBottomOf="@id/imageBack" />
 
             <TextView
@@ -68,7 +66,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/ubuntu_regular"
-                android:includeFontPadding="false"
                 android:textColor="@color/colorIcons"
                 android:textSize="15dp"
                 app:layout_constraintRight_toRightOf="@+id/inputNoteTitle"
@@ -83,23 +80,23 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="12dp"
                 android:fontFamily="@font/ubuntu_medium"
-                android:hint="Phụ đề"
-                android:importantForAutofill="no"
-                android:includeFontPadding="false"
+                android:hint="Phụ đề..."
+                android:textCursorDrawable="@drawable/cursor_color"
                 android:background="@null"
+                android:importantForAutofill="no"
                 android:inputType="textMultiLine"
                 android:paddingTop="8dp"
                 android:paddingBottom="12dp"
                 android:textColor="@color/colorTextSubtitle"
                 android:textColorHint="@color/colorTextHint"
-                android:textSize="15dp"
+                android:textSize="20dp"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/viewSubtitleIndicator"
                 app:layout_constraintTop_toBottomOf="@id/textDateTime" />
 
             <View
                 android:id="@+id/viewSubtitleIndicator"
-                android:layout_width="3dp"
+                android:layout_width="8dp"
                 android:layout_height="0dp"
                 android:layout_marginLeft="12dp"
                 android:background="@drawable/background_subtitle_indicatior"
@@ -112,23 +109,138 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginRight="12dp"
                 android:layout_marginBottom="15dp"
                 android:fontFamily="@font/ubuntu_regular"
                 android:gravity="top"
+                android:hint="Nội dung..."
+                android:textCursorDrawable="@drawable/cursor_color"
                 android:background="@null"
-                android:hint="Nội dung"
-                android:includeFontPadding="false"
                 android:importantForAutofill="no"
                 android:inputType="textMultiLine"
                 android:minHeight="200dp"
+                android:maxHeight="200dp"
                 android:textColor="@color/colorWhite"
                 android:textColorHint="@color/colorTextHint"
-                android:textSize="13dp"
+                android:textSize="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/inputNoteSubtitle" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/inputNote">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Chọn màu"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="20dp"
+                    android:gravity="center"
+                    android:fontFamily="@font/ubuntu_bold"/>
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp">
+
+                    <ImageView
+                        android:id="@+id/color_1"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:src="@drawable/background_note_color_1" />
+
+                    <ImageView
+                        android:id="@+id/checked_color_1"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:padding="6dp"
+                        android:src="@drawable/ic_done"
+                        app:tint="@color/colorWhite" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp">
+
+                    <ImageView
+                        android:id="@+id/color_2"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:src="@drawable/background_note_color_2" />
+
+                    <ImageView
+                        android:id="@+id/checked_color_2"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:padding="6dp"
+                        app:tint="@color/colorWhite" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp">
+
+                    <ImageView
+                        android:id="@+id/color_3"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:src="@drawable/background_note_color_3" />
+
+                    <ImageView
+                        android:id="@+id/checked_color_3"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:padding="6dp"
+                        app:tint="@color/colorWhite" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp">
+
+                    <ImageView
+                        android:id="@+id/color_4"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:src="@drawable/background_note_color_4" />
+
+                    <ImageView
+                        android:id="@+id/checked_color_4"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:padding="6dp"
+                        app:tint="@color/colorWhite" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp">
+
+                    <ImageView
+                        android:id="@+id/color_5"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:src="@drawable/background_note_color_5" />
+
+                    <ImageView
+                        android:id="@+id/checked_color_5"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:padding="6dp"
+                        app:tint="@color/colorWhite" />
+                </FrameLayout>
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

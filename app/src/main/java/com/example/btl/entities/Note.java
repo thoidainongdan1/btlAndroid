@@ -1,39 +1,30 @@
 package com.example.btl.entities;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
-
 import java.io.Serializable;
 
-@Entity(tableName = "notes")
 public class Note implements Serializable {
 
-    @PrimaryKey(autoGenerate = true)
     private int id;
-
-    @ColumnInfo(name = "title")
     private String title;
-
-    @ColumnInfo(name = "subtitle")
     private String subtitle;
-
-    @ColumnInfo(name = "date_time")
     private String dateTime;
-
-    @ColumnInfo(name = "note_text")
     private String noteText;
-
-    @ColumnInfo(name = "image_path")
     private String imagePath;
-
-    @ColumnInfo(name = "color")
     private String color;
 
-    @ColumnInfo(name = "web_link")
-    private String webLink;
+    public Note() {
+
+    }
+
+    public Note(int id, String title, String subtitle, String dateTime, String noteText, String imagePath, String color) {
+        this.id = id;
+        this.title = title;
+        this.subtitle = subtitle;
+        this.dateTime = dateTime;
+        this.noteText = noteText;
+        this.imagePath = imagePath;
+        this.color = color;
+    }
 
     public int getId() {
         return id;
@@ -91,15 +82,6 @@ public class Note implements Serializable {
         this.color = color;
     }
 
-    public String getWebLink() {
-        return webLink;
-    }
-
-    public void setWebLink(String webLink) {
-        this.webLink = webLink;
-    }
-
-    @NonNull
     @Override
     public String toString() {
         return title + ": " + dateTime;

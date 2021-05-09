@@ -2,8 +2,8 @@ package com.example.btl.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
-import android.os.AsyncTask;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -12,10 +12,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.btl.R;
-import com.example.btl.database.NotesDatabase;
+import com.example.btl.dao.SQLiteDB;
 import com.example.btl.entities.Note;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -23,65 +24,212 @@ public class CreateNoteActivity extends AppCompatActivity {
 
     private EditText inputNoteTitle, inputNoteSubtitle, inputNoteText;
     private TextView textDateTime;
+    private View viewSubtitleIndicator;
+    private ImageView imageBack, imageSave;
+    private ImageView color_1, color_2, color_3, color_4, color_5;
+    private ImageView checked_color_1, checked_color_2, checked_color_3, checked_color_4, checked_color_5;
+    private String selectedColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_note);
 
-        ImageView imageBack = findViewById(R.id.imageBack);
-        imageBack.setOnClickListener(v -> onBackPressed());
+        initView();
+        initColor();
 
-        inputNoteTitle = findViewById(R.id.inputNoteTitle);
-        inputNoteSubtitle = findViewById(R.id.inputNoteSubtitle);
-        inputNoteText = findViewById(R.id.inputNote);
-        textDateTime = findViewById(R.id.textDateTime);
+        textDateTime.setText(getCurrentDateTime());
 
-        textDateTime.setText(
-                new SimpleDateFormat("EEEE, dd MM yyyy HH:mm a", Locale.getDefault())
-                .format(new Date())
-        );
+        imageBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
-        ImageView imageSave = findViewById(R.id.imageSave);
         imageSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveNote();
+                if(addNote()) {
+                    finish();
+                }
             }
         });
+
+        selectColorListener();
     }
 
-    private void saveNote() {
+    private boolean addNote() {
         if(inputNoteTitle.getText().toString().trim().isEmpty()) {
             Toast.makeText(this, "Chưa có tiêu đề!!!", Toast.LENGTH_SHORT).show();
-            return;
+            return false;
         } else if(inputNoteSubtitle.getText().toString().trim().isEmpty()
                 && inputNoteText.getText().toString().trim().isEmpty()) {
             Toast.makeText(this, "Chưa có nội dung!!!", Toast.LENGTH_SHORT).show();
-            return;
+            return false;
         }
 
-        final Note note = new Note();
+        Note note = new Note();
         note.setTitle(inputNoteTitle.getText().toString());
         note.setSubtitle(inputNoteSubtitle.getText().toString());
         note.setNoteText(inputNoteText.getText().toString());
         note.setDateTime(textDateTime.getText().toString());
+        note.setColor(selectedColor);
+        SQLiteDB db = new SQLiteDB(this);
+        db.addNote(note);
+        return true;
+    }
 
-        class SaveNoteTask extends AsyncTask<Void, Void, Void> {
+    private void initView() {
+        inputNoteTitle = findViewById(R.id.inputNoteTitle);
+        inputNoteSubtitle = findViewById(R.id.inputNoteSubtitle);
+        inputNoteText = findViewById(R.id.inputNote);
+        textDateTime = findViewById(R.id.textDateTime);
+        viewSubtitleIndicator = findViewById(R.id.viewSubtitleIndicator);
+        imageBack = findViewById(R.id.imageBack);
+        imageSave = findViewById(R.id.imageSave);
+        color_1 = findViewById(R.id.color_1);
+        color_2 = findViewById(R.id.color_2);
+        color_3 = findViewById(R.id.color_3);
+        color_4 = findViewById(R.id.color_4);
+        color_5 = findViewById(R.id.color_5);
+        checked_color_1 = findViewById(R.id.checked_color_1);
+        checked_color_2 = findViewById(R.id.checked_color_2);
+        checked_color_3 = findViewById(R.id.checked_color_3);
+        checked_color_4 = findViewById(R.id.checked_color_4);
+        checked_color_5 = findViewById(R.id.checked_color_5);
+    }
 
+    private String getCurrentDateTime() {
+        String[] dayOfWeek = {"Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"};
+        String dateTime = new SimpleDateFormat("dd-MM-yyyy HH:mm a", Locale.getDefault())
+                .format(new Date());
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        int day = cal.get(Calendar.DAY_OF_WEEK) - 1;
+        return dayOfWeek[day] + ", " + dateTime;
+    }
+
+    private void selectColorListener() {
+        color_1.setOnClickListener(new View.OnClickListener() {
             @Override
-            protected Void doInBackground(Void... voids) {
-                NotesDatabase.getNotesDatabase(getApplicationContext()).noteDAO().insertNote(note);
-                return null;
+            public void onClick(View v) {
+                selectedColor = "#333333";
+                checked_color_1.setImageResource(R.drawable.ic_done);
+                checked_color_2.setImageResource(0);
+                checked_color_3.setImageResource(0);
+                checked_color_4.setImageResource(0);
+                checked_color_5.setImageResource(0);
+                setSubtitleIndicatorColor();
             }
+        });
 
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                Intent intent = new Intent();
-                setResult(RESULT_OK, intent);
-                finish();
+        color_2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedColor = "#FDBE3B";
+                checked_color_1.setImageResource(0);
+                checked_color_2.setImageResource(R.drawable.ic_done);
+                checked_color_3.setImageResource(0);
+                checked_color_4.setImageResource(0);
+                checked_color_5.setImageResource(0);
+                setSubtitleIndicatorColor();
             }
+        });
+
+        color_3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedColor = "#FF4842";
+                checked_color_1.setImageResource(0);
+                checked_color_2.setImageResource(0);
+                checked_color_3.setImageResource(R.drawable.ic_done);
+                checked_color_4.setImageResource(0);
+                checked_color_5.setImageResource(0);
+                setSubtitleIndicatorColor();
+            }
+        });
+
+        color_4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedColor = "#3A52FC";
+                checked_color_1.setImageResource(0);
+                checked_color_2.setImageResource(0);
+                checked_color_3.setImageResource(0);
+                checked_color_4.setImageResource(R.drawable.ic_done);
+                checked_color_5.setImageResource(0);
+                setSubtitleIndicatorColor();
+            }
+        });
+
+        color_5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedColor = "#000000";
+                checked_color_1.setImageResource(0);
+                checked_color_2.setImageResource(0);
+                checked_color_3.setImageResource(0);
+                checked_color_4.setImageResource(0);
+                checked_color_5.setImageResource(R.drawable.ic_done);
+                setSubtitleIndicatorColor();
+            }
+        });
+    }
+
+    private void setSubtitleIndicatorColor() {
+        GradientDrawable gradientDrawable = (GradientDrawable) viewSubtitleIndicator.getBackground();
+        gradientDrawable.setColor(Color.parseColor(selectedColor));
+    }
+
+    private void initColor() {
+        GradientDrawable gradientDrawable = (GradientDrawable) viewSubtitleIndicator.getBackground();
+        int colorId = 0;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            colorId = gradientDrawable.getColor().getDefaultColor();
         }
-        new SaveNoteTask().execute();
+        String hexColor = String.format("#%06X", (0xFFFFFF & colorId));
+        switch (hexColor) {
+            case "#333333":
+                selectedColor = "#333333";
+                checked_color_1.setImageResource(R.drawable.ic_done);
+                checked_color_2.setImageResource(0);
+                checked_color_3.setImageResource(0);
+                checked_color_4.setImageResource(0);
+                checked_color_5.setImageResource(0);
+                break;
+            case "#FDBE3B":
+                selectedColor = "#FDBE3B";
+                checked_color_1.setImageResource(0);
+                checked_color_2.setImageResource(R.drawable.ic_done);
+                checked_color_3.setImageResource(0);
+                checked_color_4.setImageResource(0);
+                checked_color_5.setImageResource(0);
+                break;
+            case "#FF4842":
+                selectedColor = "#FF4842";
+                checked_color_1.setImageResource(0);
+                checked_color_2.setImageResource(0);
+                checked_color_3.setImageResource(R.drawable.ic_done);
+                checked_color_4.setImageResource(0);
+                checked_color_5.setImageResource(0);
+                break;
+            case "#3A52FC":
+                selectedColor = "#3A52FC";
+                checked_color_1.setImageResource(0);
+                checked_color_2.setImageResource(0);
+                checked_color_3.setImageResource(0);
+                checked_color_4.setImageResource(R.drawable.ic_done);
+                checked_color_5.setImageResource(0);
+                break;
+            case "#000000":
+                selectedColor = "#000000";
+                checked_color_1.setImageResource(0);
+                checked_color_2.setImageResource(0);
+                checked_color_3.setImageResource(0);
+                checked_color_4.setImageResource(0);
+                checked_color_5.setImageResource(R.drawable.ic_done);
+                break;
+        }
     }
 }
