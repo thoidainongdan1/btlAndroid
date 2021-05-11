@@ -100,6 +100,7 @@ public class EditNoteActivity extends AppCompatActivity {
             imageName.setText("");
             selectedImagePath = null;
             imageNote.setVisibility(View.GONE);
+            imageDel.setVisibility(View.GONE);
         });
         btnDelNote.setOnClickListener(v -> new AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
@@ -294,6 +295,7 @@ public class EditNoteActivity extends AppCompatActivity {
                     Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                     imageNote.setImageBitmap(bitmap);
                     imageNote.setVisibility(View.VISIBLE);
+                    imageDel.setVisibility(View.VISIBLE);
 
                     selectedImagePath = path;
                 } catch (FileNotFoundException e) {
@@ -344,6 +346,7 @@ public class EditNoteActivity extends AppCompatActivity {
             Bitmap bitmap = BitmapFactory.decodeFile(selectedImagePath);
             imageNote.setImageBitmap(bitmap);
             imageNote.setVisibility(View.VISIBLE);
+            imageDel.setVisibility(View.VISIBLE);
         }
     }
 }

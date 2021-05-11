@@ -283,6 +283,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="18dp"
                 android:fontFamily="@font/ubuntu_regular"
+                android:visibility="gone"
                 android:text="Bỏ chọn ảnh"
                 android:backgroundTint="#FF4842"
                 android:textColor="@color/colorWhite"

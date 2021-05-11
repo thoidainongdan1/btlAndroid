@@ -92,6 +92,7 @@ public class CreateNoteActivity extends AppCompatActivity {
                 imageName.setText("");
                 selectedImagePath = null;
                 imageNote.setVisibility(View.GONE);
+                imageDel.setVisibility(View.GONE);
             }
         });
 
@@ -281,6 +282,7 @@ public class CreateNoteActivity extends AppCompatActivity {
                     Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                     imageNote.setImageBitmap(bitmap);
                     imageNote.setVisibility(View.VISIBLE);
+                    imageDel.setVisibility(View.VISIBLE);
 
                     selectedImagePath = path;
                 } catch (FileNotFoundException e) {
