@@ -3,7 +3,6 @@ package com.example.btl.activities;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -29,7 +28,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.btl.R;
 import com.example.btl.dao.SQLiteDB;
-import com.example.btl.entities.Note;
+import com.example.btl.model.Note;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;

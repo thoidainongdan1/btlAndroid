@@ -1,12 +1,11 @@
 package com.example.btl.recyclerview;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,20 +16,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.btl.R;
 import com.example.btl.activities.EditNoteActivity;
-import com.example.btl.entities.Note;
+import com.example.btl.model.Note;
 import com.makeramen.roundedimageview.RoundedImageView;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class NoteViewAdapter extends RecyclerView.Adapter<NoteViewAdapter.NoteViewHolder> {
-    private final Activity activity;
+    private final Context context;
     private List<Note> list;
 
-    public NoteViewAdapter(Activity activity) {
-        this.activity = activity;
+    public NoteViewAdapter(Context context) {
+        this.context = context;
         list = new ArrayList<>();
     }
 
@@ -73,9 +70,9 @@ public class NoteViewAdapter extends RecyclerView.Adapter<NoteViewAdapter.NoteVi
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(activity, EditNoteActivity.class);
+                Intent intent = new Intent(context, EditNoteActivity.class);
                 intent.putExtra("id", note.getId());
-                activity.startActivity(intent);
+                context.startActivity(intent);
             }
         });
     }

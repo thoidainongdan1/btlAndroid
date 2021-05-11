@@ -1,4 +1,4 @@
-package com.example.btl.entities;
+package com.example.btl.model;
 
 import java.io.Serializable;
 

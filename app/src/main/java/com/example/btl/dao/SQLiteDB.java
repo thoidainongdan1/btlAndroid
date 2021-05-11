@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
-import com.example.btl.entities.Note;
+import com.example.btl.model.Note;
 
 import java.util.ArrayList;
 import java.util.List;

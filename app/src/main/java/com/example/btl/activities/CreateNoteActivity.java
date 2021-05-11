@@ -27,12 +27,11 @@ import androidx.core.content.ContextCompat;
 
 import com.example.btl.R;
 import com.example.btl.dao.SQLiteDB;
-import com.example.btl.entities.Note;
+import com.example.btl.model.Note;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
