@@ -1,8 +1,12 @@
 package com.example.btl.recyclerview;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,14 +16,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.btl.R;
+import com.example.btl.activities.EditNoteActivity;
 import com.example.btl.entities.Note;
+import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class NoteViewAdapter extends RecyclerView.Adapter<NoteViewAdapter.NoteViewHolder> {
-    private List<Note> list;
     private final Activity activity;
+    private List<Note> list;
 
     public NoteViewAdapter(Activity activity) {
         this.activity = activity;
@@ -33,7 +41,7 @@ public class NoteViewAdapter extends RecyclerView.Adapter<NoteViewAdapter.NoteVi
     @NonNull
     @Override
     public NoteViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
-                                                int viewType) {
+                                             int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View v = inflater.inflate(R.layout.item_note, parent, false);
         return new NoteViewHolder(v);
@@ -45,21 +53,31 @@ public class NoteViewAdapter extends RecyclerView.Adapter<NoteViewAdapter.NoteVi
         holder.noteSubtitle.setText(note.getSubtitle());
         holder.noteDateTime.setText(note.getDateTime());
 
+        // set color
         GradientDrawable gradientDrawable = (GradientDrawable) holder.noteLayout.getBackground();
-        if(note.getColor() != null) {
+        if (note.getColor() != null) {
             gradientDrawable.setColor(Color.parseColor(note.getColor()));
         } else {
             gradientDrawable.setColor(Color.parseColor("#333333"));
         }
 
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(activity, UpdateDeleteActivity.class);
-//                intent.putExtra("id", s.getId());
-//                activity.startActivity(intent);
-//            }
-//        });
+        // set image
+        if (note.getImagePath() != null) {
+            holder.noteImage.setImageBitmap(BitmapFactory.decodeFile(note.getImagePath()));
+            holder.noteImage.setVisibility(View.VISIBLE);
+
+        } else {
+            holder.noteImage.setVisibility(View.GONE);
+        }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity, EditNoteActivity.class);
+                intent.putExtra("id", note.getId());
+                activity.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -75,6 +93,7 @@ public class NoteViewAdapter extends RecyclerView.Adapter<NoteViewAdapter.NoteVi
         private final TextView noteTitle;
         private final TextView noteSubtitle;
         private final TextView noteDateTime;
+        private final RoundedImageView noteImage;
 
         public NoteViewHolder(@NonNull View v) {
             super(v);
@@ -82,6 +101,7 @@ public class NoteViewAdapter extends RecyclerView.Adapter<NoteViewAdapter.NoteVi
             noteSubtitle = v.findViewById(R.id.noteSubtitle);
             noteDateTime = v.findViewById(R.id.noteDateTime);
             noteLayout = v.findViewById(R.id.noteLayout);
+            noteImage = v.findViewById(R.id.imageNote);
         }
     }
 }

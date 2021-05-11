@@ -11,12 +11,14 @@ public class Note implements Serializable {
     private String noteText;
     private String imagePath;
     private String color;
+    private long lastTime;
 
     public Note() {
 
     }
 
-    public Note(int id, String title, String subtitle, String dateTime, String noteText, String imagePath, String color) {
+    public Note(int id, String title, String subtitle, String dateTime, String noteText,
+                String imagePath, String color, long lastTime) {
         this.id = id;
         this.title = title;
         this.subtitle = subtitle;
@@ -24,6 +26,7 @@ public class Note implements Serializable {
         this.noteText = noteText;
         this.imagePath = imagePath;
         this.color = color;
+        this.lastTime = lastTime;
     }
 
     public int getId() {
@@ -80,6 +83,14 @@ public class Note implements Serializable {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public long getLastTime() {
+        return lastTime;
+    }
+
+    public void setLastTime(long lastTime) {
+        this.lastTime = lastTime;
     }
 
     @Override

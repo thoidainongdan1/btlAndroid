@@ -2,6 +2,8 @@ package com.example.btl.activities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -36,8 +38,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class CreateNoteActivity extends AppCompatActivity {
-
+public class EditNoteActivity extends AppCompatActivity {
     private static final int PICK_IMAGE = 1;
     private static final int REQUEST_PERMISSION = 2;
 
@@ -48,57 +49,73 @@ public class CreateNoteActivity extends AppCompatActivity {
     private ImageView color_1, color_2, color_3, color_4, color_5;
     private ImageView checked_color_1, checked_color_2, checked_color_3, checked_color_4, checked_color_5;
     private String selectedColor, selectedImagePath;
-    private AppCompatButton imageChooser, imageDel;
+    private AppCompatButton imageChooser, imageDel, btnDelNote;
     private ImageView imageNote;
     private TextView imageName;
+
+    private Note note;
+    private SQLiteDB db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_note);
+        setContentView(R.layout.activity_edit_note);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         initView();
-        initColor();
+        db = new SQLiteDB(this);
 
-        textDateTime.setText(getCurrentDateTime());
+        // get note information
+        Intent intent = getIntent();
+        int id = intent.getIntExtra("id", 0);
+        note = db.getNoteById(id);
+        inputNoteTitle.setText(note.getTitle());
+        inputNoteSubtitle.setText(note.getSubtitle());
+        inputNoteText.setText(note.getNoteText());
+        textDateTime.setText(note.getDateTime());
+        initColor();
+        initImage();
 
         imageBack.setOnClickListener(v -> finish());
         imageSave.setOnClickListener(v -> {
-            if (addNote()) {
-                Toast.makeText(this, "Thêm thành công", Toast.LENGTH_SHORT).show();
+            if (updateNote()) {
+                Toast.makeText(this, "Sửa thành công!!!", Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
-        imageChooser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(ContextCompat.checkSelfPermission(
-                        getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE
-                ) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(
-                            CreateNoteActivity.this,
-                            new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},
-                            REQUEST_PERMISSION
-                    );
-                } else {
-                    chooseImage();
-                }
+        imageChooser.setOnClickListener(v -> {
+            if (ContextCompat.checkSelfPermission(
+                    getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(
+                        EditNoteActivity.this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        REQUEST_PERMISSION
+                );
+            } else {
+                chooseImage();
             }
         });
-        imageDel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imageName.setText("");
-                selectedImagePath = null;
-                imageNote.setVisibility(View.GONE);
-            }
+        imageDel.setOnClickListener(v -> {
+            imageName.setText("");
+            selectedImagePath = null;
+            imageNote.setVisibility(View.GONE);
         });
-
+        btnDelNote.setOnClickListener(v -> new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setMessage("Bạn có chắc chắn muốn xoá?")
+                .setPositiveButton("Có", (dialog, which) -> {
+                    db.deleteNote(note.getId());
+                    Toast.makeText(EditNoteActivity.this, "Xoá thành công!!!",
+                            Toast.LENGTH_SHORT).show();
+                    finish();
+                })
+                .setNegativeButton("Không", null)
+                .show());
         selectColorListener();
     }
 
-    private boolean addNote() {
+    private boolean updateNote() {
         if (inputNoteTitle.getText().toString().trim().isEmpty()) {
             Toast.makeText(this, "Chưa có tiêu đề!!!", Toast.LENGTH_SHORT).show();
             return false;
@@ -108,16 +125,15 @@ public class CreateNoteActivity extends AppCompatActivity {
             return false;
         }
 
-        Note note = new Note();
         note.setTitle(inputNoteTitle.getText().toString());
         note.setSubtitle(inputNoteSubtitle.getText().toString());
         note.setNoteText(inputNoteText.getText().toString());
-        note.setDateTime(textDateTime.getText().toString());
+        note.setDateTime(getCurrentDateTime());
         note.setColor(selectedColor);
         note.setImagePath(selectedImagePath);
         note.setLastTime(new Date().getTime());
         SQLiteDB db = new SQLiteDB(this);
-        db.addNote(note);
+        db.updateNote(note);
         return true;
     }
 
@@ -141,13 +157,19 @@ public class CreateNoteActivity extends AppCompatActivity {
         checked_color_5 = findViewById(R.id.checked_color_5);
         imageChooser = findViewById(R.id.imageChooser);
         imageDel = findViewById(R.id.imageDel);
+        btnDelNote = findViewById(R.id.btnDelNote);
         imageName = findViewById(R.id.imageName);
         imageNote = findViewById(R.id.imageNote);
     }
 
     private String getCurrentDateTime() {
-        return new SimpleDateFormat("EEEE, dd-MM-yyyy HH:mm a", Locale.getDefault())
+        String[] dayOfWeek = {"Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"};
+        String dateTime = new SimpleDateFormat("dd-MM-yyyy HH:mm a", Locale.getDefault())
                 .format(new Date());
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        int day = cal.get(Calendar.DAY_OF_WEEK) - 1;
+        return dayOfWeek[day] + ", " + dateTime;
     }
 
     private void selectColorListener() {
@@ -208,15 +230,10 @@ public class CreateNoteActivity extends AppCompatActivity {
     }
 
     private void initColor() {
-        GradientDrawable gradientDrawable = (GradientDrawable) viewSubtitleIndicator.getBackground();
-        int colorId = 0;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            colorId = gradientDrawable.getColor().getDefaultColor();
-        }
-        String hexColor = String.format("#%06X", (0xFFFFFF & colorId));
-        switch (hexColor) {
+        selectedColor = note.getColor();
+        setSubtitleIndicatorColor();
+        switch (selectedColor) {
             case "#333333":
-                selectedColor = "#333333";
                 checked_color_1.setImageResource(R.drawable.ic_done);
                 checked_color_2.setImageResource(0);
                 checked_color_3.setImageResource(0);
@@ -224,7 +241,6 @@ public class CreateNoteActivity extends AppCompatActivity {
                 checked_color_5.setImageResource(0);
                 break;
             case "#FDBE3B":
-                selectedColor = "#FDBE3B";
                 checked_color_1.setImageResource(0);
                 checked_color_2.setImageResource(R.drawable.ic_done);
                 checked_color_3.setImageResource(0);
@@ -232,7 +248,6 @@ public class CreateNoteActivity extends AppCompatActivity {
                 checked_color_5.setImageResource(0);
                 break;
             case "#FF4842":
-                selectedColor = "#FF4842";
                 checked_color_1.setImageResource(0);
                 checked_color_2.setImageResource(0);
                 checked_color_3.setImageResource(R.drawable.ic_done);
@@ -240,7 +255,6 @@ public class CreateNoteActivity extends AppCompatActivity {
                 checked_color_5.setImageResource(0);
                 break;
             case "#3A52FC":
-                selectedColor = "#3A52FC";
                 checked_color_1.setImageResource(0);
                 checked_color_2.setImageResource(0);
                 checked_color_3.setImageResource(0);
@@ -248,7 +262,6 @@ public class CreateNoteActivity extends AppCompatActivity {
                 checked_color_5.setImageResource(0);
                 break;
             case "#000000":
-                selectedColor = "#000000";
                 checked_color_1.setImageResource(0);
                 checked_color_2.setImageResource(0);
                 checked_color_3.setImageResource(0);
@@ -259,10 +272,10 @@ public class CreateNoteActivity extends AppCompatActivity {
     }
 
     private void chooseImage() {
-         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-         if(intent.resolveActivity(getPackageManager()) != null) {
-             startActivityForResult(intent, PICK_IMAGE);
-         }
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(intent, PICK_IMAGE);
+        }
     }
 
     @Override
@@ -273,7 +286,7 @@ public class CreateNoteActivity extends AppCompatActivity {
                 return;
             }
             Uri uri = data.getData();
-            if(uri != null) {
+            if (uri != null) {
                 try {
                     String path = getPathFromUri(uri);
                     imageName.setText(getImageName(path));
@@ -293,8 +306,8 @@ public class CreateNoteActivity extends AppCompatActivity {
     private String getPathFromUri(Uri uri) {
         String path;
         Cursor cursor = getContentResolver()
-                .query(uri, null,null,null,null);
-        if(cursor == null) {
+                .query(uri, null, null, null, null);
+        if (cursor == null) {
             path = uri.getPath();
         } else {
             cursor.moveToFirst();
@@ -315,12 +328,22 @@ public class CreateNoteActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == REQUEST_PERMISSION && grantResults.length > 0) {
-            if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (requestCode == REQUEST_PERMISSION && grantResults.length > 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 chooseImage();
             } else {
                 Toast.makeText(this, "Không được phép truy cập!", Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    private void initImage() {
+        selectedImagePath = note.getImagePath();
+        if (selectedImagePath != null) {
+            imageName.setText(getImageName(selectedImagePath));
+            Bitmap bitmap = BitmapFactory.decodeFile(selectedImagePath);
+            imageNote.setImageBitmap(bitmap);
+            imageNote.setVisibility(View.VISIBLE);
         }
     }
 }

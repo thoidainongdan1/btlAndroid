@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     android:paddingBottom="10dp"
-    tools:context=".activities.CreateNoteActivity">
+    tools:context=".activities.EditNoteActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -302,5 +302,19 @@
             android:textSize="13dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/imageChooserLayout" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnDelNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="120dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="120dp"
+            android:backgroundTint="#FF4842"
+            android:fontFamily="@font/ubuntu_regular"
+            android:text="Xoá ghi chú"
+            android:textColor="@color/colorWhite"
+            app:layout_constraintTop_toBottomOf="@id/imageName"
+            android:textSize="15dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
