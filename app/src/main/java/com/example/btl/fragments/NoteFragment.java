@@ -2,12 +2,6 @@ package com.example.btl.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-import androidx.viewpager.widget.ViewPager;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -17,13 +11,16 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+
 import com.example.btl.R;
 import com.example.btl.activities.CreateNoteActivity;
 import com.example.btl.dao.SQLiteDB;
 import com.example.btl.model.Note;
 import com.example.btl.recyclerview.NoteViewAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;
 

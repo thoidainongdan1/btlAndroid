@@ -1,6 +1,5 @@
 package com.example.btl.recyclerview;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;

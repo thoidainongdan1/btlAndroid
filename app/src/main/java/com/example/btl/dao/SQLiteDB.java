@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 import com.example.btl.model.Note;
+import com.example.btl.model.Schedule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,7 @@ public class SQLiteDB extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String sql = "CREATE TABLE note(" +
+        String sql1 = "CREATE TABLE note(" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "title TEXT," +
                 "subtitle TEXT," +
@@ -31,8 +32,14 @@ public class SQLiteDB extends SQLiteOpenHelper {
                 "noteText TEXT," +
                 "imagePath TEXT," +
                 "color TEXT," +
-                "lastTime LONG)";
-        db.execSQL(sql);
+                "lastTime LONG);\n";
+
+        String sql2 = "CREATE TABLE schedule(" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "content TEXT)";
+
+        db.execSQL(sql1);
+        db.execSQL(sql2);
     }
 
     @Override
@@ -53,6 +60,13 @@ public class SQLiteDB extends SQLiteOpenHelper {
         db.insert("note", null, contentValues);
     }
 
+    public void addSchedule(Schedule schedule) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("content", schedule.getContent());
+        SQLiteDatabase db = getWritableDatabase();
+        db.insert("schedule", null, contentValues);
+    }
+
     public List<Note> getAllNotes() {
         List<Note> list = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
@@ -68,6 +82,21 @@ public class SQLiteDB extends SQLiteOpenHelper {
             String color = cursor.getString(6);
             long lastTime = cursor.getLong(7);
             list.add(new Note(id, title, subtitle, dateTime, noteText, imagePath, color, lastTime));
+        }
+        cursor.close();
+
+        return list;
+    }
+
+    public List<Schedule> getAllSchedules() {
+        List<Schedule> list = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.query("schedule", null, null, null,
+                null, null, "id DESC");
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(0);
+            String content = cursor.getString(1);
+            list.add(new Schedule(id, content));
         }
         cursor.close();
 
@@ -104,6 +133,13 @@ public class SQLiteDB extends SQLiteOpenHelper {
         return db.delete("note", whereClause, whereArgs);
     }
 
+    public int deleteSchedule(int id) {
+        String whereClause = "id = ?";
+        String[] whereArgs = {Integer.toString(id)};
+        SQLiteDatabase db = getWritableDatabase();
+        return db.delete("schedule", whereClause, whereArgs);
+    }
+
     public int updateNote(Note note) {
         String whereClause = "id = ?";
         String[] whereArgs = {Integer.toString(note.getId())};
@@ -138,6 +174,24 @@ public class SQLiteDB extends SQLiteOpenHelper {
             String color = cursor.getString(6);
             long lastTime = cursor.getLong(7);
             list.add(new Note(id, title, subtitle, dateTime, noteText, imagePath, color, lastTime));
+        }
+        cursor.close();
+
+        return list;
+    }
+
+    public List<Schedule> searchByContent(String key) {
+        List<Schedule> list = new ArrayList<>();
+        String whereClause = "content like ?";
+        String[] whereArgs = {"%" + key + "%"};
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor cursor = db.query("schedule", null, whereClause, whereArgs,
+                null, null, null);
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(0);
+            String content = cursor.getString(1);
+            list.add(new Schedule(id, content));
         }
         cursor.close();
 

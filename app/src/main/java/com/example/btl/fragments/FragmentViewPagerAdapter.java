@@ -28,9 +28,6 @@ public class FragmentViewPagerAdapter extends FragmentStatePagerAdapter {
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        switch(position){
-            case 0: return "Ghi chú";
-            case 1: return "Đặt lịch";
-            default: return "Ghi chú";
-        }
-    }}
+        return "";
+    }
+}
